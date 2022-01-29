@@ -53,7 +53,12 @@ returnPage = () => {
     await page.goto('https://news.ycombinator.com', {
       waitUntil: 'networkidle2',
     });
-    await page.pdf({ path: './hn.pdf', format: 'a4' });
+    try {
+      await page.screenshot({ path: "./screenshot.png" });
+      console.log('Screen has been shotted')
+    } catch (err) {
+      console.log(err)
+    }
 
     await browser.close();
   })();
