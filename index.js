@@ -46,20 +46,18 @@ showTimes = () => {
   return result;
 }
 
-returnPage = () => {
-  (async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.goto('https://news.ycombinator.com', {
-      waitUntil: 'networkidle2',
-    });
-    try {
-      await page.screenshot({ path: "./screenshot.png" });
-      console.log('Screen has been shotted')
-    } catch (err) {
-      console.log(err)
-    }
+async function returnPage() {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.goto('https://news.ycombinator.com', {
+    waitUntil: 'networkidle2',
+  });
+  try {
+    await page.screenshot({ path: "./screenshot.png" });
+    console.log('Screen has been shotted')
+  } catch (err) {
+    console.log(err)
+  }
 
-    await browser.close();
-  })();
-}
+  await browser.close();
+};
