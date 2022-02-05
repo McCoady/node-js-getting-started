@@ -1,63 +1,86 @@
 const express = require('express')
-const path = require('path')
-const cool = require('cool-ascii-faces')
+const fs = require('fs');
+const path = require('path');
 const puppeteer = require('puppeteer');
-const PORT = process.env.PORT || 5000
-const { Pool } = require('pg');
-
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
+const pinataSDK = require('@pinata/sdk');
+const pinata = pinataSDK("ca2a171f24a57d7ca40d", process.env.API_SECRET);
+const PORT = process.env.PORT || 5000;
 
 express()
   .use(express.static(path.join(__dirname, 'public')))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
   .get('/', (req, res) => res.render('pages/index'))
-  .get('/cool', (req, res) => res.send(cool()))
-  .get('/times', (req, res) => res.send(showTimes()))
-  .get('/scrape', (req, res) => res.send(returnPage()))
-  .get('/db', async (req, res) => {
-    try {
-      const client = await pool.connect();
-      const result = await client.query('SELECT * FROM test_table');
-      const results = { 'results': (result) ? result.rows : null };
-      res.render('pages/db', results);
-      client.release();
-    } catch (err) {
-      console.error(err);
-      res.send("Error " + err);
-    }
+  .get('/scrape/', (req, res) => {
+    const { x, t } = req.query;
+    tokenId = Buffer.from(x, 'utf-8').toString('base64')
+    hash = Buffer.from(t, 'utf-8').toString('base64')
+    res.send(returnPng(tokenId, hash))
   })
-  .listen(PORT, () => console.log(`Listening on ${PORT}`))
+  .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
+async function returnPng(tokenId, hash) {
 
-
-showTimes = () => {
-  let result = '';
-  const times = process.env.TIMES || 5;
-  for (i = 0; i < times; i++) {
-    result += i + ' ';
+  async function findPng() {
+    const metadataFilter = {
+      name: tokenId + hash,
+    }
+    const filters = {
+      status: 'pinned',
+      metadata: metadataFilter
+    }
+    const result = await pinata.pinList(filters)
+    return result
   }
-  return result;
+
+  async function getPng() {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    const url = 'https://ipfs.io/ipfs/QmVA89MA4uo6yPbLxzzd8XvTAKerFbjWApnwHV3UqxrmCw?x=' + tokenId + "&t=" + hash;
+    await page.goto(url, { waitUntil: 'networkidle2', });
+    try {
+      const dataUrl = await page.evaluate(() => {
+        const canvas = document.getElementById('defaultCanvas0');
+        return canvas.toDataURL();
+      });
+      let base64Data, binaryData;
+      base64Data = dataUrl.replace(/^data:image\/png;base64,/, "");
+      base64Data += base64Data.replace('+', ' ');
+      binaryData = new Buffer.from(base64Data, 'base64').toString('binary');
+      fs.writeFile("out.png", binaryData, 'binary', function (e) {
+        const readableStreamForFile = fs.createReadStream("out.png");
+        const options = {
+          pinataMetadata: {
+            name: tokenId + hash
+          },
+          pinataOptions: {
+            cidVersion: 0
+          }
+        }
+        pinata.pinFileToIPFS(readableStreamForFile, options).then((result) => {
+          console.log(result);
+        }).catch((e) => {
+          console.log(e);
+        });
+        console.log(e);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    await browser.close();
+  }
+
+
+  let obj = findPng();
+  obj.then(function (ipfsPin) {
+    if (ipfsPin.count >= 1) {
+      console.log(ipfsPin);
+      return "https://ipfs.io/ipfs/" + ipfsPin.rows[0].ipfs_pin_hash
+    } else {
+      getPng().then(console.log(('Image being generated, please wait')))
+    }
+
+
+  })
+
 }
-
-async function returnPage() {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.goto('https://news.ycombinator.com', {
-    waitUntil: 'networkidle2',
-  });
-  try {
-    await page.screenshot({ path: "./screenshot.png" });
-    console.log('Screen has been shotted')
-  } catch (err) {
-    console.log(err)
-  }
-
-  await browser.close();
-};
