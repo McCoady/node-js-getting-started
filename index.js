@@ -6,6 +6,8 @@ const pinataSDK = require('@pinata/sdk');
 const pinata = pinataSDK("ca2a171f24a57d7ca40d", process.env.API_SECRET);
 const PORT = process.env.PORT || 5000;
 
+let urlRedirect;
+
 express()
   .use(express.static(path.join(__dirname, 'public')))
   .set('views', path.join(__dirname, 'views'))
@@ -15,7 +17,10 @@ express()
     const { x, t } = req.query;
     tokenId = Buffer.from(x, 'utf-8').toString('base64')
     hash = Buffer.from(t, 'utf-8').toString('base64')
-    res.send(returnPng(tokenId, hash))
+    returnPng(tokenId, hash).then((url) => {
+      console.log(url)
+      res.redirect(Buffer.from(url))
+    })
   })
   .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
@@ -72,15 +77,22 @@ async function returnPng(tokenId, hash) {
 
 
   let obj = findPng();
-  obj.then(function (ipfsPin) {
+  const url = obj.then(function (ipfsPin) {
     if (ipfsPin.count >= 1) {
+      urlRedirect = "https://ipfs.io/ipfs/" + ipfsPin.rows[0].ipfs_pin_hash
       console.log(ipfsPin);
-      return "https://ipfs.io/ipfs/" + ipfsPin.rows[0].ipfs_pin_hash
+      //console.log(urlRedirect)
+      return urlRedirect;
     } else {
-      getPng().then(console.log(('Image being generated, please wait')))
+      getPng().then(console.log(('Image being generated, please wait')));
+      return "not ready";
     }
 
-
+  }).then(function (result) {
+    return result
   })
+
+  return url;
+  //CAN I RERTURN FROM THE .THEN FUNCTION AT THE END?!
 
 }
