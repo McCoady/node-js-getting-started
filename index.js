@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
 const pinataSDK = require('@pinata/sdk');
-const pinata = pinataSDK("ca2a171f24a57d7ca40d", process.env.API_SECRET);
+const pinata = pinataSDK("ca2a171f24a57d7ca40d", "c0528064038468a8202d42b8c2d96e8546ebb9c6104094cc93e33d0b96258935");
 const PORT = process.env.PORT || 5000;
 
 let urlRedirect;
