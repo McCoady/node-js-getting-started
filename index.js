@@ -75,7 +75,6 @@ async function returnPng(tokenId, hash) {
     await browser.close();
   }
 
-
   let obj = findPng();
   const url = obj.then(function (ipfsPin) {
     if (ipfsPin.count >= 1) {
@@ -91,8 +90,5 @@ async function returnPng(tokenId, hash) {
   }).then(function (result) {
     return result
   })
-
   return url;
-  //CAN I RERTURN FROM THE .THEN FUNCTION AT THE END?!
-
 }
