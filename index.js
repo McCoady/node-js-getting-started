@@ -39,8 +39,11 @@ async function returnPng(tokenId, hash) {
   }
 
   async function getPng() {
+    console.log("getPngStarted")
     const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+    console.log("browser launched")
     const page = await browser.newPage();
+    console.log("new page created")
     const url = 'https://ipfs.io/ipfs/QmVA89MA4uo6yPbLxzzd8XvTAKerFbjWApnwHV3UqxrmCw?x=' + tokenId + "&t=" + hash;
     await page.goto(url, { waitUntil: 'networkidle2', });
     try {
