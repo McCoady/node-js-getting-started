@@ -82,7 +82,7 @@ async function returnPng(tokenId, hash) {
   let obj = findPng();
   const url = obj.then(function (ipfsPin) {
     if (ipfsPin.count >= 1) {
-      urlRedirect = "ipfs://" + ipfsPin.rows[0].ipfs_pin_hash
+      urlRedirect = "https://ipfs.io/ipfs/" + ipfsPin.rows[0].ipfs_pin_hash
       console.log(ipfsPin);
       //console.log(urlRedirect)
       return urlRedirect;
