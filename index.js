@@ -48,11 +48,7 @@ async function returnPng(tokenId, hash) {
       const url = 'https://ipfs.io/ipfs/QmVA89MA4uo6yPbLxzzd8XvTAKerFbjWApnwHV3UqxrmCw?x=' + tokenId + "&t=" + hash;
       console.log(url)
       await page.goto(url, { waitUntil: 'networkidle2', });
-    } catch (e) {
-      console.log(e);
-    }
 
-    try {
       const dataUrl = await page.evaluate(() => {
         const canvas = document.getElementById('defaultCanvas0');
         return canvas.toDataURL();
