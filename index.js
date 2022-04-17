@@ -41,11 +41,11 @@ async function returnPng(tokenId, hash) {
   async function getPng() {
     try {
       console.log("getPngStarted")
-      const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'], ignoreDefaultArgs: ['--disable-extensions'] });
+      const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
       console.log("browser launched")
       const page = await browser.newPage();
       console.log("new page created")
-      const url = 'https://ipfs.io/ipfs/QmTLjieP3jvSqFHVXWerxt5neQYRuY6btcRrMwfet7egcb?x=' + tokenId + "&t=" + hash;
+      const url = 'https://ipfs.io/ipfs/QmTGwrJ2R7gyGQvKH32zJH2uqD6ALPXBRxoKF9c5Z59KQq?x=' + tokenId + "&t=" + hash;
       console.log(url)
       await page.goto(url, { waitUntil: 'networkidle2', });
 
@@ -89,7 +89,7 @@ async function returnPng(tokenId, hash) {
       return urlRedirect;
     } else {
       getPng().then(console.log(('Image being generated, please wait')));
-      return findPng();
+      return "image generating";
     }
 
   }).then(function (result) {
