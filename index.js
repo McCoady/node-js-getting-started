@@ -41,7 +41,7 @@ async function returnPng(tokenId, hash) {
   async function getPng() {
     try {
       console.log("getPngStarted")
-      const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+      const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'], ignoreDefaultArgs: ['--disable-extensions'] });
       console.log("browser launched")
       const page = await browser.newPage();
       console.log("new page created")
