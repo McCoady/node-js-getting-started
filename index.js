@@ -89,7 +89,7 @@ async function returnPng(tokenId, hash) {
       return urlRedirect;
     } else {
       getPng().then(console.log(('Image being generated, please wait')));
-      return "image generating";
+      return findPng();
     }
 
   }).then(function (result) {
