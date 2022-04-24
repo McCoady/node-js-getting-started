@@ -39,16 +39,16 @@ async function returnPng(tokenId, hash) {
   }
 
   async function getPng() {
-    try {
-      console.log("getPngStarted")
-      const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
-      console.log("browser launched")
-      const page = await browser.newPage();
-      console.log("new page created")
-      const url = 'https://ipfs.io/ipfs/QmVA89MA4uo6yPbLxzzd8XvTAKerFbjWApnwHV3UqxrmCw?x=' + tokenId + "&t=" + hash;
-      console.log(url)
-      await page.goto(url, { waitUntil: 'networkidle2', });
 
+    console.log("getPngStarted")
+    const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+    console.log("browser launched")
+    const page = await browser.newPage();
+    console.log("new page created")
+    const url = 'https://ipfs.io/ipfs/QmaEtzMaRUmbTaAc2PBkDGZyMbdL2gXt6M18cC4ESsVNT1?x=' + tokenId + "&t=" + hash;
+    console.log(url)
+    try {
+      await page.goto(url, { waitUntil: 'networkidle2', });
       const dataUrl = await page.evaluate(() => {
         const canvas = document.getElementById('defaultCanvas0');
         return canvas.toDataURL();
