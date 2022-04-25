@@ -42,7 +42,7 @@ async function returnPng(tokenId, hash) {
 
     console.log("getPngStarted")
     const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
-    console.log("browser launched")
+    console.log("browser launchedd")
     const page = await browser.newPage();
     console.log("new page created")
     const url = 'https://ipfs.io/ipfs/QmaEtzMaRUmbTaAc2PBkDGZyMbdL2gXt6M18cC4ESsVNT1?x=' + tokenId + "&t=" + hash;
