@@ -45,7 +45,7 @@ async function returnPng(tokenId, hash) {
     console.log("browser launched")
     const page = await browser.newPage();
     console.log("new page created")
-    const url = 'https://circolors.mypinata.cloud/ipfs/QmV1sBsRSTqxVgzQAkeAqP2kHbeXQV8MpwB8cZXqafseca?x=' + tokenId + "&t=" + hash;
+    const url = 'https://circolors.mypinata.cloud/ipfs/QmRuABYS3s1TeXcNsdjjCTUtSSCMa9WrVyUNGyTFJM7MTp?x=' + tokenId + "&t=" + hash;
     console.log(url)
     try {
       await page.goto(url, { waitUntil: 'networkidle2', });
