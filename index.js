@@ -42,10 +42,17 @@ async function returnPng(tokenId, hash) {
 
     console.log("getPngStarted")
     const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+<<<<<<< HEAD
     console.log("browser launched")
     const page = await browser.newPage();
     console.log("new page created")
     const url = 'https://circolors.mypinata.cloud/ipfs/QmRuABYS3s1TeXcNsdjjCTUtSSCMa9WrVyUNGyTFJM7MTp?x=' + tokenId + "&t=" + hash;
+=======
+    console.log("browser launchedd")
+    const page = await browser.newPage();
+    console.log("new page created")
+    const url = 'https://ipfs.io/ipfs/QmaEtzMaRUmbTaAc2PBkDGZyMbdL2gXt6M18cC4ESsVNT1?x=' + tokenId + "&t=" + hash;
+>>>>>>> 810e6720c86b86d874b3be78ca1945a4785d520f
     console.log(url)
     try {
       await page.goto(url, { waitUntil: 'networkidle2', });
